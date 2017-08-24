@@ -2,9 +2,9 @@
 # Start portus
 
 if [ "$PORTUS_KEY_PATH" != "" ]; then
-   NAME=`basename $PORTUS_KEY_PATH .key`
+    NAME=`basename $PORTUS_KEY_PATH .key`
 else
-   NAME="registry"
+    NAME="registry"
 fi
 if [ "$PORTUS_PORT" = "" ]; then
     PORTUS_PORT=443
@@ -16,8 +16,8 @@ mkdir -p /etc/nginx/conf.d
 cat >/etc/nginx/conf.d/portus.conf <<_END_
       server {
         listen 443 ssl;
-        ssl_certificate     certs/$NAME.crt;
-        ssl_certificate_key certs/$NAME.key;
+        ssl_certificate     $PROXY_SSL_CERTIFICATE;
+        ssl_certificate_key $PROXY_SSL_CERTIFICATE_KEY;
         location / {
           proxy_set_header Host $PORTUS_MACHINE_FQDN;
           proxy_set_header X-Forwarded-Proto https;
@@ -68,4 +68,3 @@ bundle exec crono &
 
 echo Starting Portus
 /usr/bin/env /usr/local/bin/ruby /usr/local/bundle/bin/puma $*
-
