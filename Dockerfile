@@ -1,5 +1,5 @@
-FROM library/rails:4.2.2
-MAINTAINER Steve Shipway <s.shipway@auckland.ac.nz>
+FROM library/ruby:2.3.1
+MAINTAINER Flavio Castelli <fcastelli@suse.com>
 
 ENV RAILS_ENV=production
 ENV COMPOSE=1
@@ -12,8 +12,9 @@ EXPOSE 3000
 ADD . .
 
 COPY Gemfile* ./
-RUN bundle install --retry=3
-
+RUN bundle install --retry=3 && bundle binstubs phantomjs
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends nodejs
 RUN mkdir -p /etc/nginx/conf.d
 VOLUME /etc/nginx/conf.d
 
